@@ -1,0 +1,74 @@
+site_name: Axioma
+site_description: Lenguaje de programacion en espanol
+site_url: https://axioma.netlify.app
+site_author: TopitoTobal
+repo_url: https://github.com/TopitoTobal/axioma
+repo_name: TopitoTobal/axioma
+
+theme:
+  name: material
+  language: es
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/weather-night
+        name: Modo oscuro
+    - scheme: slate
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/weather-sunny
+        name: Modo claro
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/TopitoTobal/axioma
+    - icon: fontawesome/brands/microsoft
+      link: https://marketplace.visualstudio.com/items?itemName=TopitoTobal.axioma-lang
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - admonition
+  - footnotes
+  - tables
+  - codehilite
+  - toc:
+      permalink: true
+
+nav:
+  - Inicio: index.md
+  - Introduccion: 01-introduccion.md
+  - Instalacion: 02-instalacion.md
+  - Primeros Pasos: 03-primeros-pasos.md
+  - Sintaxis: 04-sintaxis.md
+  - Variables y Tipos: 05-variables-y-tipos.md
+  - Operadores: 06-operadores.md
+  - Control de Flujo: 07-control-flujo.md
+  - Funciones: 08-funciones.md
+  - Clases y POO: 09-clases.md
+  - Listas: 10-listas.md
+  - Ejemplos: 11-ejemplos.md
+  - Referencia: 12-referencia.md
+
+copyright: Copyright &copy; 2026 TopitoTobal - Licencia MIT

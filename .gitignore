@@ -8,6 +8,7 @@ __pycache__/
 build/
 *.spec
 *.vsix
+site/
 
 # IDE
 /.vscode/
