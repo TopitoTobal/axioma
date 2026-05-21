@@ -9,6 +9,8 @@ def ejecutar_archivo(ruta):
 
 
 def ejecutar_repl():
+    from .logo import LOGO
+    print(LOGO)
     print("Axioma v1.0 - Lenguaje de programacion en espanol")
     print("Escribe 'salir()' para terminar")
     entorno_historial = None
