@@ -1,0 +1,13 @@
+// Listas en Axioma
+var numeros = [1, 2, 3, 4, 5];
+
+imprimir "Lista de numeros:";
+para (var i = 0; i < 5; i = i + 1) {
+    imprimir numeros[i];
+}
+
+var frutas = ["manzana", "pera", "uva"];
+imprimir "La primera fruta es: " + frutas[0];
+
+var mixto = [1, "hola", verdadero, nulo];
+imprimir mixto;

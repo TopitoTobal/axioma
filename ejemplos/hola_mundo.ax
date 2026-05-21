@@ -1,0 +1,11 @@
+// Primer programa en Axioma
+imprimir "¡Hola, mundo desde Axioma!";
+
+var nombre = "Mundo";
+imprimir "Hola " + nombre;
+
+var edad = 25;
+imprimir "Edad: " + edad;
+
+var pi = 3.1416;
+imprimir "Pi vale: " + pi;

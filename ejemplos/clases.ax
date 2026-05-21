@@ -1,0 +1,33 @@
+// Clases en Axioma
+clase Animal {
+    funcion iniciar(nombre) {
+        este.nombre = nombre;
+    }
+
+    funcion saludar() {
+        imprimir "Hola, soy " + este.nombre;
+    }
+
+    funcion sonido() {
+        imprimir "...";
+    }
+}
+
+clase Perro heredar Animal {
+    funcion iniciar(nombre, raza) {
+        este.nombre = nombre;
+        este.raza = raza;
+    }
+
+    funcion sonido() {
+        imprimir "Guau! Soy un " + este.raza;
+    }
+}
+
+var animal = nuevo Animal("Generico");
+animal.saludar();
+animal.sonido();
+
+var perro = nuevo Perro("Rex", "Pastor Aleman");
+perro.saludar();
+perro.sonido();

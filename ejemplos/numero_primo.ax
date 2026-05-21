@@ -1,0 +1,23 @@
+// Verificador de numeros primos
+funcion es_primo(n) {
+    si (n <= 1) {
+        retornar falso;
+    }
+
+    var i = 2;
+    mientras (i * i <= n) {
+        si (n % i == 0) {
+            retornar falso;
+        }
+        i = i + 1;
+    }
+    retornar verdadero;
+}
+
+// Encontrar primos hasta 50
+imprimir "Numeros primos hasta 50:";
+para (var i = 1; i <= 50; i = i + 1) {
+    si (es_primo(i)) {
+        imprimir i;
+    }
+}

@@ -1,0 +1,14 @@
+// Fibonacci en Axioma
+funcion fibonacci(n) {
+    si (n <= 1) {
+        retornar n;
+    }
+    retornar fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+var limite = 10;
+imprimir "Fibonacci hasta " + limite;
+
+para (var i = 0; i < limite; i = i + 1) {
+    imprimir "fib(" + i + ") = " + fibonacci(i);
+}
