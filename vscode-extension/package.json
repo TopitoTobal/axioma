@@ -1,8 +1,19 @@
 {
-  "name": "Axioma",
+  "name": "axioma-lang",
+  "displayName": "Axioma",
   "version": "1.0.0",
   "publisher": "TopitoTobal",
   "description": "Soporte para el lenguaje de programacion Axioma - programacion en espanol",
+  "icon": "icons/axioma-icon.png",
+  "license": "MIT",
+  "homepage": "https://github.com/TopitoTobal/axioma",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TopitoTobal/axioma.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TopitoTobal/axioma/issues"
+  },
   "engines": {
     "vscode": "^1.60.0"
   },
