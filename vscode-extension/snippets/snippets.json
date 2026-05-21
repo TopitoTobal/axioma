@@ -1,0 +1,95 @@
+{
+    "Hola Mundo": {
+        "prefix": "hola",
+        "body": "imprimir \"Hola, mundo!\";",
+        "description": "Imprime Hola mundo"
+    },
+    "Si condicion": {
+        "prefix": "si",
+        "body": [
+            "si (${1:condicion}) {",
+            "\t${2}",
+            "}"
+        ],
+        "description": "Estructura condicional si"
+    },
+    "Si-Sino": {
+        "prefix": "si-sino",
+        "body": [
+            "si (${1:condicion}) {",
+            "\t${2}",
+            "} sino {",
+            "\t${3}",
+            "}"
+        ],
+        "description": "Estructura condicional si-sino"
+    },
+    "Mientras": {
+        "prefix": "mientras",
+        "body": [
+            "mientras (${1:condicion}) {",
+            "\t${2}",
+            "}"
+        ],
+        "description": "Bucle mientras"
+    },
+    "Para": {
+        "prefix": "para",
+        "body": [
+            "para (var ${1:i} = ${2:0}; ${3:i < limite}; ${4:i = i + 1}) {",
+            "\t${5}",
+            "}"
+        ],
+        "description": "Bucle para"
+    },
+    "Funcion": {
+        "prefix": "funcion",
+        "body": [
+            "funcion ${1:nombre}(${2:parametros}) {",
+            "\t${3:retornar ${4:valor};}",
+            "}"
+        ],
+        "description": "Declaracion de funcion"
+    },
+    "Imprimir": {
+        "prefix": "imprimir",
+        "body": "imprimir ${1:valor};",
+        "description": "Imprime un valor"
+    },
+    "Var": {
+        "prefix": "var",
+        "body": "var ${1:nombre} = ${2:valor};",
+        "description": "Declaracion de variable"
+    },
+    "Clase": {
+        "prefix": "clase",
+        "body": [
+            "clase ${1:Nombre} {",
+            "\tfuncion iniciar(${2:parametros}) {",
+            "\t\t${3}",
+            "\t}",
+            "",
+            "\tfuncion ${4:metodo}() {",
+            "\t\t${5}",
+            "\t}",
+            "}"
+        ],
+        "description": "Declaracion de clase"
+    },
+    "Clase con herencia": {
+        "prefix": "clase-hereda",
+        "body": [
+            "clase ${1:Hija} heredar ${2:Padre} {",
+            "\tfuncion iniciar(${3:parametros}) {",
+            "\t\t${4}",
+            "\t}",
+            "}"
+        ],
+        "description": "Clase con herencia"
+    },
+    "Retornar": {
+        "prefix": "retornar",
+        "body": "retornar ${1:valor};",
+        "description": "Retorna un valor"
+    }
+}

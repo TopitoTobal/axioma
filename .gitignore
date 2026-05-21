@@ -9,6 +9,6 @@ build/
 *.spec
 
 # IDE
-.vscode/
+/.vscode/
 .idea/
 *.swp

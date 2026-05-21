@@ -1,0 +1,39 @@
+{
+  "name": "Axioma",
+  "version": "1.0.0",
+  "publisher": "TopitoTobal",
+  "description": "Soporte para el lenguaje de programacion Axioma - programacion en espanol",
+  "engines": {
+    "vscode": "^1.60.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "axioma",
+        "aliases": ["Axioma", "axioma"],
+        "extensions": [".ax"],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "dark": "./icons/axioma-icon.png",
+          "light": "./icons/axioma-icon.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "axioma",
+        "scopeName": "source.axioma",
+        "path": "./syntaxes/axioma.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "axioma",
+        "path": "./snippets/snippets.json"
+      }
+    ]
+  }
+}

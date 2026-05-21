@@ -24,6 +24,24 @@ pyinstaller --onefile --name=axioma --distpath=dist --clean --noconfirm --consol
 
 Agrega `dist/` a tu PATH.
 
+### Extension de VS Code
+
+Extension oficial para Visual Studio Code con resaltado de sintaxis, snippets y configuracion del lenguaje.
+
+```bash
+# Desde la carpeta vscode-extension/
+cd vscode-extension
+
+# Instalar vsce (una vez)
+npm install -g @vscode/vsce
+
+# Empaquetar e instalar
+vsce package
+code --install-extension axioma-1.0.0.vsix
+```
+
+O simplemente abre la carpeta `vscode-extension` en VS Code y presiona `F5`.
+
 ### Opción 2: Desde Python
 
 ```bash

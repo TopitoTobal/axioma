@@ -1,0 +1,123 @@
+{
+    "scopeName": "source.axioma",
+    "name": "Axioma",
+    "fileTypes": ["ax"],
+    "patterns": [
+        { "include": "#comments" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#keywords" },
+        { "include": "#operators" },
+        { "include": "#punctuation" }
+    ],
+    "repository": {
+        "comments": {
+            "patterns": [
+                {
+                    "begin": "/\\*",
+                    "end": "\\*/",
+                    "name": "comment.block.axioma"
+                },
+                {
+                    "match": "//.*$",
+                    "name": "comment.line.double-slash.axioma"
+                }
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "begin": "\"",
+                    "end": "\"",
+                    "name": "string.quoted.double.axioma",
+                    "patterns": [
+                        {
+                            "match": "\\\\.",
+                            "name": "constant.character.escape.axioma"
+                        }
+                    ]
+                }
+            ]
+        },
+        "numbers": {
+            "patterns": [
+                {
+                    "match": "\\b[0-9]+(\\.[0-9]+)?\\b",
+                    "name": "constant.numeric.axioma"
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "match": "\\b(verdadero|falso)\\b",
+                    "name": "constant.language.axioma"
+                },
+                {
+                    "match": "\\b(nulo)\\b",
+                    "name": "constant.language.axioma"
+                },
+                {
+                    "match": "\\b(var)\\b",
+                    "name": "storage.type.axioma"
+                },
+                {
+                    "match": "\\b(funcion|retornar)\\b",
+                    "name": "keyword.control.axioma"
+                },
+                {
+                    "match": "\\b(si|sino)\\b",
+                    "name": "keyword.control.conditional.axioma"
+                },
+                {
+                    "match": "\\b(mientras|para)\\b",
+                    "name": "keyword.control.loop.axioma"
+                },
+                {
+                    "match": "\\b(imprimir)\\b",
+                    "name": "support.function.builtin.axioma"
+                },
+                {
+                    "match": "\\b(clase|nuevo|este|heredar)\\b",
+                    "name": "keyword.other.axioma"
+                },
+                {
+                    "match": "\\b(y|o|no)\\b",
+                    "name": "keyword.operator.logical.axioma"
+                }
+            ]
+        },
+        "operators": {
+            "patterns": [
+                {
+                    "match": "\\+\\=|\\-\\=|\\*\\=|\\/\\=",
+                    "name": "keyword.operator.assignment.compound.axioma"
+                },
+                {
+                    "match": "\\=\\=|\\!\\=",
+                    "name": "keyword.operator.comparison.axioma"
+                },
+                {
+                    "match": "\\<\\=|\\>\\=|\\<|\\>",
+                    "name": "keyword.operator.comparison.axioma"
+                },
+                {
+                    "match": "\\=",
+                    "name": "keyword.operator.assignment.axioma"
+                },
+                {
+                    "match": "\\+|\\-|\\*|\\/|\\%",
+                    "name": "keyword.operator.arithmetic.axioma"
+                }
+            ]
+        },
+        "punctuation": {
+            "patterns": [
+                {
+                    "match": "[\\(\\)\\{\\}\\[\\]\\.\\,\\;\\:]",
+                    "name": "punctuation.definition.axioma"
+                }
+            ]
+        }
+    }
+}
