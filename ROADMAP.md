@@ -29,10 +29,10 @@ Cosas por terminar y mejorar, ordenadas por prioridad.
 
 ## 4. Mejoras al Lenguaje
 
-- [ ] `len()` — Obtener longitud de listas y strings
-- [ ] `sino si` — Sintaxis compacta para condiciones anidadas
-- [ ] `romper` — Break en bucles
-- [ ] `continuar` — Continue en bucles
+- [x] `len()` — Obtener longitud de listas y strings
+- [x] `sino si` — Sintaxis compacta para condiciones anidadas
+- [x] `romper` — Break en bucles
+- [x] `continuar` — Continue en bucles
 - [ ] `segun` — Switch/case
 - [ ] `importar` — Sistema de modulos/archivos
 - [ ] Operadores de comparacion encadenados (`1 < x < 10`)

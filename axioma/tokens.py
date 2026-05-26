@@ -63,6 +63,8 @@ class TiposToken:
     ESTE = "ESTE"
     NUEVO = "NUEVO"
     HEREDAR = "HEREDAR"
+    ROMPER = "ROMPER"
+    CONTINUAR = "CONTINUAR"
 
     EOF = "EOF"
 
@@ -86,4 +88,6 @@ PALABRAS_CLAVE = {
     "este": TiposToken.ESTE,
     "nuevo": TiposToken.NUEVO,
     "heredar": TiposToken.HEREDAR,
+    "romper": TiposToken.ROMPER,
+    "continuar": TiposToken.CONTINUAR,
 }

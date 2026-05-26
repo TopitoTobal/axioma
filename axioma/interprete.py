@@ -4,6 +4,7 @@ from .ast import (
     Imprimir, ExpresionStmt, Binaria, Unaria, Literal,
     Variable, Llamada, GetAttr, SetAttr, DeclararClase,
     Este, Nueva, AccesoLista, AsignarLista, LiteralLista,
+    Romper, Continuar,
 )
 from .tokens import TiposToken
 
@@ -17,6 +18,14 @@ class ErrorEjecucion(Exception):
 class Retorno(Exception):
     def __init__(self, valor):
         self.valor = valor
+
+
+class RomperExcepcion(Exception):
+    pass
+
+
+class ContinuarExcepcion(Exception):
+    pass
 
 
 class Entorno:
@@ -122,6 +131,18 @@ class Interprete:
     def __init__(self):
         self.entorno_global = Entorno()
         self.entorno = self.entorno_global
+        self._registrar_nativas()
+
+    def _registrar_nativas(self):
+        def _len(*args):
+            if len(args) != 1:
+                raise ErrorEjecucion(f"len() espera 1 argumento, se recibieron {len(args)}")
+            val = args[0]
+            if isinstance(val, (list, str)):
+                return len(val)
+            raise ErrorEjecucion(f"len() no soporta el tipo {type(val).__name__}")
+
+        self.entorno_global.definir("len", _len)
 
     def interpretar(self, nodo):
         if isinstance(nodo, Programa):
@@ -161,6 +182,10 @@ class Interprete:
             return self._evaluar(nodo.expresion)
         if isinstance(nodo, Nueva):
             return self._visitar_nueva(nodo)
+        if isinstance(nodo, Romper):
+            raise RomperExcepcion()
+        if isinstance(nodo, Continuar):
+            raise ContinuarExcepcion()
         raise ErrorEjecucion(f"No se puede ejecutar: {type(nodo).__name__}")
 
     def _evaluar(self, nodo):
@@ -344,7 +369,12 @@ class Interprete:
 
     def _visitar_mientras(self, nodo):
         while self._es_verdadero(self._evaluar(nodo.condicion)):
-            self._ejecutar(nodo.cuerpo)
+            try:
+                self._ejecutar(nodo.cuerpo)
+            except RomperExcepcion:
+                break
+            except ContinuarExcepcion:
+                continue
 
     def _visitar_para(self, nodo):
         entorno_para = Entorno(self.entorno)
@@ -358,7 +388,12 @@ class Interprete:
             while True:
                 if nodo.condicion is not None and not self._es_verdadero(self._evaluar(nodo.condicion)):
                     break
-                self._ejecutar(nodo.cuerpo)
+                try:
+                    self._ejecutar(nodo.cuerpo)
+                except RomperExcepcion:
+                    break
+                except ContinuarExcepcion:
+                    pass
                 if nodo.incremento is not None:
                     self._evaluar(nodo.incremento)
         finally:

@@ -5,6 +5,7 @@ from .ast import (
     Imprimir, ExpresionStmt, Binaria, Unaria, Literal,
     Variable, Llamada, GetAttr, SetAttr, DeclararClase,
     Este, Nueva, AccesoLista, AsignarLista, LiteralLista,
+    Romper, Continuar,
 )
 
 
@@ -81,6 +82,10 @@ class Parser:
             return self._sentencia_retornar()
         if self._coincide(TiposToken.IMPRIMIR):
             return self._sentencia_imprimir()
+        if self._coincide(TiposToken.ROMPER):
+            return self._sentencia_romper()
+        if self._coincide(TiposToken.CONTINUAR):
+            return self._sentencia_continuar()
         if self._coincide(TiposToken.LLAVE_IZQ):
             return self._bloque()
         return self._sentencia_expresion()
@@ -106,7 +111,7 @@ class Parser:
         self._consumir(TiposToken.PAREN_IZQ, "Se esperaba '(' despues de 'para'")
 
         inicializacion = None
-        if not self._coincide(TiposToken.PUNTO_COMA):
+        if not self._fin() and self._ver_actual().tipo != TiposToken.PUNTO_COMA:
             if self._coincide(TiposToken.VAR):
                 nombre = self._consumir(TiposToken.IDENTIFICADOR, "Se esperaba nombre de variable")
                 valor = None
@@ -118,7 +123,7 @@ class Parser:
         self._consumir(TiposToken.PUNTO_COMA, "Se esperaba ';' en la inicializacion del 'para'")
 
         condicion = None
-        if not self._coincide(TiposToken.PUNTO_COMA):
+        if not self._fin() and self._ver_actual().tipo != TiposToken.PUNTO_COMA:
             condicion = self._expresion()
         self._consumir(TiposToken.PUNTO_COMA, "Se esperaba ';' en la condicion del 'para'")
 
@@ -132,10 +137,18 @@ class Parser:
 
     def _sentencia_retornar(self):
         valor = None
-        if not self._coincide(TiposToken.PUNTO_COMA):
+        if not self._fin() and self._ver_actual().tipo != TiposToken.PUNTO_COMA:
             valor = self._expresion()
         self._consumir(TiposToken.PUNTO_COMA, "Se esperaba ';' despues de 'retornar'")
         return Retornar(valor)
+
+    def _sentencia_romper(self):
+        self._consumir(TiposToken.PUNTO_COMA, "Se esperaba ';' despues de 'romper'")
+        return Romper()
+
+    def _sentencia_continuar(self):
+        self._consumir(TiposToken.PUNTO_COMA, "Se esperaba ';' despues de 'continuar'")
+        return Continuar()
 
     def _sentencia_imprimir(self):
         valor = self._expresion()

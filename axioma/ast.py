@@ -150,3 +150,11 @@ class AsignarLista(Nodo):
 class LiteralLista(Nodo):
     def __init__(self, elementos):
         self.elementos = elementos
+
+
+class Romper(Nodo):
+    pass
+
+
+class Continuar(Nodo):
+    pass
