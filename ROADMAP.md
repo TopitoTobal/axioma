@@ -11,13 +11,13 @@ Cosas por terminar y mejorar, ordenadas por prioridad.
 - [ ] Ejecutar `vsce login TopitoTobal` y pegar el token
 - [ ] Publicar con `vsce publish`
 
-## 2. Documentacion — Deploy a Netlify
+## 2. Documentacion — Deploy a Netlify ✅
 
-- [ ] Ir a https://app.netlify.com > Add new site > Import from GitHub
-- [ ] Seleccionar `TopitoTobal/axioma`
-- [ ] Netlify detecta automaticamente: build = `pip install -r requirements-docs.txt && mkdocs build`, publish = `site`
+- [x] Ir a https://app.netlify.com > Add new site > Import from GitHub
+- [x] Seleccionar `TopitoTobal/axioma`
+- [x] Netlify detecta automaticamente: build = `pip install -r requirements-docs.txt && mkdocs build`, publish = `site`
 - [ ] Configurar dominio personalizado (opcional)
-- [ ] Agregar badge de "Deployed on Netlify" al README
+- [x] Agregar enlace de documentacion al README
 
 ## 3. Testing — Suite de Pruebas
 
@@ -43,14 +43,14 @@ Cosas por terminar y mejorar, ordenadas por prioridad.
 - [ ] Funciones anonimas (lambdas)
 - [ ] `intentar` / `atrapar` — Manejo de errores
 
-## 5. Mejoras al CLI
+## 5. Mejoras al CLI ✅
 
-- [ ] Mejor formateo de errores (colores, contexto de linea)
-- [ ] Historial de comandos en REPL (flecha arriba)
-- [ ] Comando `--version`
-- [ ] Comando `--help`
-- [ ] Comando `--repl` para forzar modo interactivo
-- [ ] Poder ejecutar codigo con `-c "imprimir 2+2"`
+- [x] Mejor formateo de errores (colores, contexto de linea)
+- [x] Historial de comandos en REPL (flecha arriba)
+- [x] Comando `--version`
+- [x] Comando `--help`
+- [x] Comando `--repl` para forzar modo interactivo
+- [x] Poder ejecutar codigo con `-c "imprimir 2+2"`
 
 ## 6. VS Code Extension — Mejoras
 
