@@ -448,15 +448,73 @@ class Interprete:
         raise ErrorEjecucion(f"No se puede llamar: {type(callee).__name__}")
 
     def _visitar_get_attr(self, nodo):
-        objeto = self._evaluar(nodo.objeto)
-        if isinstance(objeto, InstanciaAxioma):
-            return objeto.obtener(nodo.nombre)
-        if isinstance(objeto, ClaseAxioma):
-            metodo = objeto.encontrar_metodo(nodo.nombre)
-            if metodo is not None:
-                return metodo
-            raise ErrorEjecucion(f"La clase {objeto.nombre} no tiene metodo '{nodo.nombre}'")
-        raise ErrorEjecucion(f"Solo las instancias tienen propiedades")
+            objeto = self._evaluar(nodo.objeto)
+
+            if isinstance(objeto, str):
+                if nodo.nombre not in (
+                    "mayusculas", "minusculas", "recortar", "dividir"
+                ):
+                    raise ErrorEjecucion(
+                        f"El texto no tiene metodo '{nodo.nombre}'"
+                    )
+
+                def metodo_texto(*argumentos):
+                    if nodo.nombre == "dividir":
+                        if len(argumentos) > 1:
+                            raise ErrorEjecucion(
+                                f"dividir() espera 0 o 1 argumentos, "
+                                f"se recibieron {len(argumentos)}"
+                            )
+
+                        if not argumentos:
+                            return objeto.split()
+
+                        separador = argumentos[0]
+
+                        if not isinstance(separador, str):
+                            raise ErrorEjecucion(
+                                "El separador de dividir() debe ser un texto"
+                            )
+
+                        if separador == "":
+                            raise ErrorEjecucion(
+                                "El separador de dividir() no puede estar vacio"
+                            )
+
+                        return objeto.split(separador)
+
+                    if argumentos:
+                        raise ErrorEjecucion(
+                            f"{nodo.nombre}() espera 0 argumentos, "
+                            f"se recibieron {len(argumentos)}"
+                        )
+
+                    if nodo.nombre == "mayusculas":
+                        return objeto.upper()
+
+                    if nodo.nombre == "minusculas":
+                        return objeto.lower()
+
+                    return objeto.strip()
+
+                return metodo_texto
+
+            if isinstance(objeto, InstanciaAxioma):
+                return objeto.obtener(nodo.nombre)
+
+            if isinstance(objeto, ClaseAxioma):
+                metodo = objeto.encontrar_metodo(nodo.nombre)
+
+                if metodo is not None:
+                    return metodo
+
+                raise ErrorEjecucion(
+                    f"La clase {objeto.nombre} no tiene metodo '{nodo.nombre}'"
+                )
+
+            raise ErrorEjecucion(
+                "Solo los textos, las instancias y las clases tienen propiedades"
+            )
 
     def _visitar_set_attr(self, nodo):
         objeto = self._evaluar(nodo.objeto)
