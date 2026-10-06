@@ -1,0 +1,10 @@
+var texto = "  Hola Axioma  ";
+
+imprimir texto.mayusculas();
+imprimir texto.minusculas();
+imprimir texto.recortar();
+imprimir texto.recortar().mayusculas();
+
+imprimir "uno dos tres".dividir();
+imprimir "uno,dos,tres".dividir(",");
+imprimir texto;
