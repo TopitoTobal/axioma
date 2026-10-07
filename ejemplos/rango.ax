@@ -1,0 +1,8 @@
+var numeros = 1..10;
+imprimir numeros;
+imprimir len(numeros);
+var suma = 0;
+para (var i = 0; i < len(numeros); i = i + 1) {
+    suma = suma + numeros[i];
+}
+imprimir suma;

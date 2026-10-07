@@ -66,6 +66,14 @@ class TiposToken:
     ROMPER = "ROMPER"
     CONTINUAR = "CONTINUAR"
 
+    SEGUN = "SEGUN"
+    CASO = "CASO"
+    DEFECTO = "DEFECTO"
+    INTENTAR = "INTENTAR"
+    ATRAPAR = "ATRAPAR"
+
+    PUNTO_PUNTO = "PUNTO_PUNTO"
+
     EOF = "EOF"
 
 
@@ -90,4 +98,9 @@ PALABRAS_CLAVE = {
     "heredar": TiposToken.HEREDAR,
     "romper": TiposToken.ROMPER,
     "continuar": TiposToken.CONTINUAR,
+    "segun": TiposToken.SEGUN,
+    "caso": TiposToken.CASO,
+    "defecto": TiposToken.DEFECTO,
+    "intentar": TiposToken.INTENTAR,
+    "atrapar": TiposToken.ATRAPAR,
 }

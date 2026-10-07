@@ -1,0 +1,5 @@
+var persona = {"nombre": "Ana", "edad": 25};
+imprimir persona;
+imprimir persona["nombre"];
+persona["ciudad"] = "Madrid";
+imprimir len(persona);

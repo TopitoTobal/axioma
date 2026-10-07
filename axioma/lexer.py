@@ -39,7 +39,9 @@ class Lexer:
             return
 
         if c == '/':
-            if self._coincide('/'):
+            if self._coincide('='):
+                self._agregar_token(TiposToken.ASIGNAR_DIV)
+            elif self._coincide('/'):
                 while self.actual < len(self.codigo) and self.codigo[self.actual] != '\n':
                     self._avanzar()
             elif self._coincide('*'):
@@ -123,7 +125,10 @@ class Lexer:
             self._agregar_token(TiposToken.COMA)
             return
         if c == '.':
-            self._agregar_token(TiposToken.PUNTO)
+            if self._coincide('.'):
+                self._agregar_token(TiposToken.PUNTO_PUNTO)
+            else:
+                self._agregar_token(TiposToken.PUNTO)
             return
         if c == ';':
             self._agregar_token(TiposToken.PUNTO_COMA)
@@ -175,7 +180,8 @@ class Lexer:
         while self.actual < len(self.codigo) and self.codigo[self.actual].isdigit():
             self._avanzar()
 
-        if self.actual < len(self.codigo) and self.codigo[self.actual] == '.':
+        if self.actual < len(self.codigo) and self.codigo[self.actual] == '.' \
+                and self.actual + 1 < len(self.codigo) and self.codigo[self.actual + 1].isdigit():
             self._avanzar()
             while self.actual < len(self.codigo) and self.codigo[self.actual].isdigit():
                 self._avanzar()

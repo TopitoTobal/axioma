@@ -1,0 +1,11 @@
+var dia = 3;
+segun (dia) {
+    caso 1: imprimir "Lunes";
+    caso 2: imprimir "Martes";
+    caso 3: imprimir "Miercoles";
+    caso 4: imprimir "Jueves";
+    caso 5: imprimir "Viernes";
+    caso 6: imprimir "Sabado";
+    caso 7: imprimir "Domingo";
+    defecto: imprimir "Dia invalido";
+}

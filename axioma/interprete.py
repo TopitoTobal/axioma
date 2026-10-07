@@ -4,7 +4,7 @@ from .ast import (
     Imprimir, ExpresionStmt, Binaria, Unaria, Literal,
     Variable, Llamada, GetAttr, SetAttr, DeclararClase,
     Este, Nueva, AccesoLista, AsignarLista, LiteralLista,
-    Romper, Continuar,
+    Romper, Continuar, Segun, Intentar, Rango, DiccionarioLiteral,
 )
 from .tokens import TiposToken
 
@@ -138,7 +138,7 @@ class Interprete:
             if len(args) != 1:
                 raise ErrorEjecucion(f"len() espera 1 argumento, se recibieron {len(args)}")
             val = args[0]
-            if isinstance(val, (list, str)):
+            if isinstance(val, (list, str, dict)):
                 return len(val)
             raise ErrorEjecucion(f"len() no soporta el tipo {type(val).__name__}")
 
@@ -186,6 +186,10 @@ class Interprete:
             raise RomperExcepcion()
         if isinstance(nodo, Continuar):
             raise ContinuarExcepcion()
+        if isinstance(nodo, Segun):
+            return self._visitar_segun(nodo)
+        if isinstance(nodo, Intentar):
+            return self._visitar_intentar(nodo)
         raise ErrorEjecucion(f"No se puede ejecutar: {type(nodo).__name__}")
 
     def _evaluar(self, nodo):
@@ -214,8 +218,20 @@ class Interprete:
         if isinstance(nodo, AccesoLista):
             lista = self._evaluar(nodo.lista)
             indice = self._evaluar(nodo.indice)
+            if isinstance(lista, dict):
+                if indice is None or not isinstance(indice, (str, int, float, bool)):
+                    raise ErrorEjecucion("La clave debe ser un valor valido")
+                if indice not in lista:
+                    raise ErrorEjecucion(f"Clave '{indice}' no encontrada")
+                return lista[indice]
+            if isinstance(lista, str):
+                if not isinstance(indice, int):
+                    raise ErrorEjecucion("El indice debe ser un numero entero")
+                if indice < 0 or indice >= len(lista):
+                    raise ErrorEjecucion(f"Indice {indice} fuera de rango")
+                return lista[indice]
             if not isinstance(lista, list):
-                raise ErrorEjecucion("Solo se puede acceder por indice a listas")
+                raise ErrorEjecucion("Solo se puede acceder por indice a listas, strings o diccionarios")
             if not isinstance(indice, int):
                 raise ErrorEjecucion("El indice debe ser un numero entero")
             if indice < 0 or indice >= len(lista):
@@ -223,12 +239,24 @@ class Interprete:
             return lista[indice]
         if isinstance(nodo, Nueva):
             return self._visitar_nueva(nodo)
+        if isinstance(nodo, Rango):
+            desde = self._evaluar(nodo.desde)
+            hasta = self._evaluar(nodo.hasta)
+            self._chequear_entero(desde, hasta)
+            return list(range(desde, hasta + 1))
+        if isinstance(nodo, DiccionarioLiteral):
+            return {self._evaluar(k): self._evaluar(v) for k, v in nodo.pares}
         if isinstance(nodo, AsignarLista):
             lista = self._evaluar(nodo.lista)
             indice = self._evaluar(nodo.indice)
             valor = self._evaluar(nodo.valor)
+            if isinstance(lista, dict):
+                if not isinstance(indice, (str, int, float, bool)) or indice is None:
+                    raise ErrorEjecucion("La clave debe ser un valor valido")
+                lista[indice] = valor
+                return valor
             if not isinstance(lista, list):
-                raise ErrorEjecucion("Solo se puede asignar por indice a listas")
+                raise ErrorEjecucion("Solo se puede asignar por indice a listas o diccionarios")
             if not isinstance(indice, int):
                 raise ErrorEjecucion("El indice debe ser un numero entero")
             if indice < 0 or indice >= len(lista):
@@ -297,8 +325,13 @@ class Interprete:
 
     def _chequear_numero(self, *args):
         for arg in args:
-            if not isinstance(arg, (int, float)):
+            if not isinstance(arg, (int, float)) or isinstance(arg, bool):
                 raise ErrorEjecucion(f"Se esperaba un numero, se obtuvo {type(arg).__name__}")
+
+    def _chequear_entero(self, *args):
+        for arg in args:
+            if not isinstance(arg, int) or isinstance(arg, bool):
+                raise ErrorEjecucion("El rango requiere numeros enteros")
 
     def _es_verdadero(self, valor):
         if valor is None:
@@ -448,73 +481,113 @@ class Interprete:
         raise ErrorEjecucion(f"No se puede llamar: {type(callee).__name__}")
 
     def _visitar_get_attr(self, nodo):
-            objeto = self._evaluar(nodo.objeto)
+        objeto = self._evaluar(nodo.objeto)
 
-            if isinstance(objeto, str):
-                if nodo.nombre not in (
-                    "mayusculas", "minusculas", "recortar", "dividir"
-                ):
-                    raise ErrorEjecucion(
-                        f"El texto no tiene metodo '{nodo.nombre}'"
-                    )
+        if isinstance(objeto, str):
+            if nodo.nombre not in (
+                "mayusculas", "minusculas", "recortar", "dividir"
+            ):
+                raise ErrorEjecucion(
+                    f"El texto no tiene metodo '{nodo.nombre}'"
+                )
 
-                def metodo_texto(*argumentos):
-                    if nodo.nombre == "dividir":
-                        if len(argumentos) > 1:
-                            raise ErrorEjecucion(
-                                f"dividir() espera 0 o 1 argumentos, "
-                                f"se recibieron {len(argumentos)}"
-                            )
-
-                        if not argumentos:
-                            return objeto.split()
-
-                        separador = argumentos[0]
-
-                        if not isinstance(separador, str):
-                            raise ErrorEjecucion(
-                                "El separador de dividir() debe ser un texto"
-                            )
-
-                        if separador == "":
-                            raise ErrorEjecucion(
-                                "El separador de dividir() no puede estar vacio"
-                            )
-
-                        return objeto.split(separador)
-
-                    if argumentos:
+            def metodo_texto(*argumentos):
+                if nodo.nombre == "dividir":
+                    if len(argumentos) > 1:
                         raise ErrorEjecucion(
-                            f"{nodo.nombre}() espera 0 argumentos, "
+                            f"dividir() espera 0 o 1 argumentos, "
                             f"se recibieron {len(argumentos)}"
                         )
 
-                    if nodo.nombre == "mayusculas":
-                        return objeto.upper()
+                    if not argumentos:
+                        return objeto.split()
 
-                    if nodo.nombre == "minusculas":
-                        return objeto.lower()
+                    separador = argumentos[0]
 
-                    return objeto.strip()
+                    if not isinstance(separador, str):
+                        raise ErrorEjecucion(
+                            "El separador de dividir() debe ser un texto"
+                        )
 
-                return metodo_texto
+                    if separador == "":
+                        raise ErrorEjecucion(
+                            "El separador de dividir() no puede estar vacio"
+                        )
 
-            if isinstance(objeto, InstanciaAxioma):
-                return objeto.obtener(nodo.nombre)
+                    return objeto.split(separador)
 
-            if isinstance(objeto, ClaseAxioma):
-                metodo = objeto.encontrar_metodo(nodo.nombre)
+                if argumentos:
+                    raise ErrorEjecucion(
+                        f"{nodo.nombre}() espera 0 argumentos, "
+                        f"se recibieron {len(argumentos)}"
+                    )
 
-                if metodo is not None:
-                    return metodo
+                if nodo.nombre == "mayusculas":
+                    return objeto.upper()
 
-                raise ErrorEjecucion(
-                    f"La clase {objeto.nombre} no tiene metodo '{nodo.nombre}'"
-                )
+                if nodo.nombre == "minusculas":
+                    return objeto.lower()
+
+                return objeto.strip()
+
+            return metodo_texto
+
+        if isinstance(objeto, InstanciaAxioma):
+            return objeto.obtener(nodo.nombre)
+
+        if isinstance(objeto, ClaseAxioma):
+            metodo = objeto.encontrar_metodo(nodo.nombre)
+
+            if metodo is not None:
+                return metodo
 
             raise ErrorEjecucion(
-                "Solo los textos, las instancias y las clases tienen propiedades"
+                f"La clase {objeto.nombre} no tiene metodo '{nodo.nombre}'"
             )
+
+        if isinstance(objeto, list):
+            return self._metodo_lista(objeto, nodo.nombre)
+
+        if isinstance(objeto, dict):
+            if nodo.nombre in objeto:
+                return objeto[nodo.nombre]
+            raise ErrorEjecucion(f"Clave '{nodo.nombre}' no encontrada")
+
+        raise ErrorEjecucion(
+            "Solo los textos, las instancias y las clases tienen propiedades"
+        )
+
+    def _metodo_lista(self, lista, nombre):
+        if nombre == "empujar":
+            def empujar(*args):
+                if len(args) != 1:
+                    raise ErrorEjecucion("empujar() espera 1 argumento")
+                lista.append(args[0])
+                return None
+            return empujar
+        if nombre == "sacar":
+            def sacar(*args):
+                if len(args) == 0:
+                    if not lista:
+                        raise ErrorEjecucion("No se puede sacar de una lista vacia")
+                    return lista.pop()
+                if len(args) == 1:
+                    indice = args[0]
+                    if not isinstance(indice, int):
+                        raise ErrorEjecucion("El indice debe ser un numero entero")
+                    if indice < 0 or indice >= len(lista):
+                        raise ErrorEjecucion(f"Indice {indice} fuera de rango")
+                    return lista.pop(indice)
+                raise ErrorEjecucion("sacar() espera 0 o 1 argumentos")
+            return sacar
+        if nombre == "longitud":
+            return lambda: len(lista)
+        if nombre == "vaciar":
+            def vaciar():
+                lista.clear()
+                return None
+            return vaciar
+        raise ErrorEjecucion(f"Metodo de lista desconocido: '{nombre}'")
 
     def _visitar_set_attr(self, nodo):
         objeto = self._evaluar(nodo.objeto)
@@ -526,6 +599,24 @@ class Interprete:
 
     def _visitar_este(self, nodo):
         return self.entorno.obtener("este")
+
+    def _visitar_segun(self, nodo):
+        valor = self._evaluar(nodo.expresion)
+        for caso_valor, cuerpo in nodo.casos:
+            if self._evaluar(caso_valor) == valor:
+                self._ejecutar_bloque(cuerpo.declaraciones, Entorno(self.entorno))
+                return
+        if nodo.defecto is not None:
+            self._ejecutar_bloque(nodo.defecto.declaraciones, Entorno(self.entorno))
+
+    def _visitar_intentar(self, nodo):
+        try:
+            self._ejecutar_bloque(nodo.cuerpo.declaraciones, Entorno(self.entorno))
+        except ErrorEjecucion as e:
+            entorno_atrapar = Entorno(self.entorno)
+            if nodo.variable is not None:
+                entorno_atrapar.definir(nodo.variable, e.mensaje)
+            self._ejecutar_bloque(nodo.atrapar.declaraciones, entorno_atrapar)
 
     def _visitar_nueva(self, nodo):
         from .ast import LiteralLista
@@ -555,6 +646,8 @@ class Interprete:
             return str(valor)
         if isinstance(valor, list):
             return "[" + ", ".join(self._formatear(e) for e in valor) + "]"
+        if isinstance(valor, dict):
+            return "{" + ", ".join(f"{self._formatear(k)}: {self._formatear(v)}" for k, v in valor.items()) + "}"
         if isinstance(valor, str):
             return valor
         return str(valor)

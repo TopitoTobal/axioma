@@ -158,3 +158,28 @@ class Romper(Nodo):
 
 class Continuar(Nodo):
     pass
+
+
+class Segun(Nodo):
+    def __init__(self, expresion, casos, defecto):
+        self.expresion = expresion
+        self.casos = casos
+        self.defecto = defecto
+
+
+class Intentar(Nodo):
+    def __init__(self, cuerpo, variable, atrapar):
+        self.cuerpo = cuerpo
+        self.variable = variable
+        self.atrapar = atrapar
+
+
+class Rango(Nodo):
+    def __init__(self, desde, hasta):
+        self.desde = desde
+        self.hasta = hasta
+
+
+class DiccionarioLiteral(Nodo):
+    def __init__(self, pares):
+        self.pares = pares

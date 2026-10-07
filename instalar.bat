@@ -1,6 +1,12 @@
 @echo off
 setlocal
 
+:: Auto-elevar a administrador si no lo es
+fltmc >nul 2>&1 || (
+    powershell -Command "Start-Process -Verb RunAs -FilePath '%~s0'"
+    exit /b
+)
+
 set "DIST_DIR=%~dp0dist"
 set "EXE_PATH=%DIST_DIR%\axioma.exe"
 
@@ -13,6 +19,10 @@ if not exist "%EXE_PATH%" (
 
 echo Agregando %DIST_DIR% al PATH del usuario...
 setx PATH "%DIST_DIR%;%PATH%"
+
+echo Asociando archivos .ax con Axioma...
+assoc .ax=Axioma.File
+ftype Axioma.File="%EXE_PATH%" "%1"
 
 echo.
 echo Instalacion completada!

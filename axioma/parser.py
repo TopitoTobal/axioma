@@ -5,7 +5,7 @@ from .ast import (
     Imprimir, ExpresionStmt, Binaria, Unaria, Literal,
     Variable, Llamada, GetAttr, SetAttr, DeclararClase,
     Este, Nueva, AccesoLista, AsignarLista, LiteralLista,
-    Romper, Continuar,
+    Romper, Continuar, Segun, Intentar, Rango, DiccionarioLiteral,
 )
 
 
@@ -82,6 +82,10 @@ class Parser:
             return self._sentencia_retornar()
         if self._coincide(TiposToken.IMPRIMIR):
             return self._sentencia_imprimir()
+        if self._coincide(TiposToken.SEGUN):
+            return self._sentencia_segun()
+        if self._coincide(TiposToken.INTENTAR):
+            return self._sentencia_intentar()
         if self._coincide(TiposToken.ROMPER):
             return self._sentencia_romper()
         if self._coincide(TiposToken.CONTINUAR):
@@ -89,6 +93,46 @@ class Parser:
         if self._coincide(TiposToken.LLAVE_IZQ):
             return self._bloque()
         return self._sentencia_expresion()
+
+    def _sentencia_segun(self):
+        self._consumir(TiposToken.PAREN_IZQ, "Se esperaba '(' despues de 'segun'")
+        expresion = self._expresion()
+        self._consumir(TiposToken.PAREN_DER, "Se esperaba ')' despues de la expresion")
+        self._consumir(TiposToken.LLAVE_IZQ, "Se esperaba '{' antes de los casos")
+        casos = []
+        defecto = None
+        while not self._fin() and self._ver_actual().tipo != TiposToken.LLAVE_DER:
+            if self._coincide(TiposToken.CASO):
+                valor = self._expresion()
+                self._consumir(TiposToken.DOS_PUNTOS, "Se esperaba ':' despues del caso")
+                cuerpo = []
+                while not self._fin() and self._ver_actual().tipo not in (
+                        TiposToken.CASO, TiposToken.DEFECTO, TiposToken.LLAVE_DER):
+                    cuerpo.append(self._declaracion())
+                casos.append((valor, Bloque(cuerpo)))
+            elif self._coincide(TiposToken.DEFECTO):
+                self._consumir(TiposToken.DOS_PUNTOS, "Se esperaba ':' despues de 'defecto'")
+                defecto = []
+                while not self._fin() and self._ver_actual().tipo not in (
+                        TiposToken.CASO, TiposToken.DEFECTO, TiposToken.LLAVE_DER):
+                    defecto.append(self._declaracion())
+                defecto = Bloque(defecto)
+            else:
+                raise ErrorSintaxis("Se esperaba 'caso' o 'defecto'", self._ver_actual())
+        self._consumir(TiposToken.LLAVE_DER, "Se esperaba '}' para cerrar 'segun'")
+        return Segun(expresion, casos, defecto)
+
+    def _sentencia_intentar(self):
+        self._consumir(TiposToken.LLAVE_IZQ, "Se esperaba '{' despues de 'intentar'")
+        cuerpo = self._bloque()
+        self._consumir(TiposToken.ATRAPAR, "Se esperaba 'atrapar' despues de 'intentar'")
+        variable = None
+        if self._coincide(TiposToken.PAREN_IZQ):
+            variable = self._consumir(TiposToken.IDENTIFICADOR, "Se esperaba nombre de variable en 'atrapar'").valor
+            self._consumir(TiposToken.PAREN_DER, "Se esperaba ')' despues de la variable")
+        self._consumir(TiposToken.LLAVE_IZQ, "Se esperaba '{' despues de 'atrapar'")
+        atrapar = self._bloque()
+        return Intentar(cuerpo, variable, atrapar)
 
     def _sentencia_si(self):
         self._consumir(TiposToken.PAREN_IZQ, "Se esperaba '(' despues de 'si'")
@@ -234,6 +278,9 @@ class Parser:
 
     def _comparacion(self):
         expr = self._termino()
+        if self._coincide(TiposToken.PUNTO_PUNTO):
+            hasta = self._termino()
+            return Rango(expr, hasta)
         while self._coincide(TiposToken.MENOR, TiposToken.MAYOR, TiposToken.MENOR_IGUAL, TiposToken.MAYOR_IGUAL):
             operador = self._anterior()
             derecha = self._termino()
@@ -324,6 +371,20 @@ class Parser:
                     argumentos.append(self._expresion())
                 self._consumir(TiposToken.PAREN_DER, "Se esperaba ')' despues de argumentos")
             return Nueva(nombre.valor, argumentos)
+        if self._coincide(TiposToken.LLAVE_IZQ):
+            pares = []
+            if not self._coincide(TiposToken.LLAVE_DER):
+                clave = self._expresion()
+                self._consumir(TiposToken.DOS_PUNTOS, "Se esperaba ':' despues de la clave")
+                valor = self._expresion()
+                pares.append((clave, valor))
+                while self._coincide(TiposToken.COMA):
+                    clave = self._expresion()
+                    self._consumir(TiposToken.DOS_PUNTOS, "Se esperaba ':' despues de la clave")
+                    valor = self._expresion()
+                    pares.append((clave, valor))
+                self._consumir(TiposToken.LLAVE_DER, "Se esperaba '}' para cerrar el diccionario")
+            return DiccionarioLiteral(pares)
 
         raise ErrorSintaxis("Expresion inesperada", self._ver_actual())
 

@@ -33,15 +33,15 @@ Cosas por terminar y mejorar, ordenadas por prioridad.
 - [x] `sino si` — Sintaxis compacta para condiciones anidadas
 - [x] `romper` — Break en bucles
 - [x] `continuar` — Continue en bucles
-- [ ] `segun` — Switch/case
+- [x] `segun` — Switch/case
 - [ ] `importar` — Sistema de modulos/archivos
 - [ ] Operadores de comparacion encadenados (`1 < x < 10`)
 - [ ] Metodos de string: `mayusculas()`, `minusculas()`, `recortar()`, `dividir()`
-- [ ] Metodos de lista: `empujar()`, `sacar()`, `longitud()`
-- [ ] Tipos de datos adicionales: diccionarios/objetos literales (`{ clave: valor }`)
-- [ ] Rango (`1..10`)
+- [x] Metodos de lista: `empujar()`, `sacar()`, `longitud()`, `vaciar()`
+- [x] Tipos de datos adicionales: diccionarios/objetos literales (`{ clave: valor }`)
+- [x] Rango (`1..10`)
 - [ ] Funciones anonimas (lambdas)
-- [ ] `intentar` / `atrapar` — Manejo de errores
+- [x] `intentar` / `atrapar` — Manejo de errores
 
 ## 5. Mejoras al CLI ✅
 

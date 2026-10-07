@@ -1,0 +1,12 @@
+intentar {
+    var lista = [1, 2, 3];
+    imprimir lista[10];
+} atrapar (error) {
+    imprimir "Error atrapado: " + error;
+}
+
+intentar {
+    var x = 1 / 0;
+} atrapar (error) {
+    imprimir "Error atrapado: " + error;
+}
